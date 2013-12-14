@@ -22,6 +22,7 @@ function shasum (data, enc) {
 module.exports = function (dir) {
   if(!dir)
     throw new Error('content-addressable-store needs a directory to work in')
+  var init = false, db
 
   function toPath (hash) {
     return path.join(dir, hash.substring(0, 2), hash.substring(2))
@@ -31,40 +32,34 @@ module.exports = function (dir) {
     return path.join(dir, 'tmp', Date.now() + '-' + Math.random().toString().substring(2))
   }
 
-  var init = false
-
   //make sure the /tmp directory exists (first write only)
   function prepare (stream, ready) {
     if(init) return ready()
     stream.pause()
     mkdirp(path.join(dir, 'tmp'), function (err) {
       if(err) return stream.emit('error', err)
-      init = true
-      console.log('resume')
-      ready()
-      stream.resume()
+      init = true; ready(); stream.resume()
     })
   }
 
-  var db
   return db = {
     get: function (hash, opts, cb) {
       if(!cb) cb = opts, opts = null
       fs.readFile(toPath(hash), opts && opts.encoding, cb)
     },
-    add: function (content, opts, cb) {
+    add: function (data, opts, cb) {
       if(!cb) cb = opts, opts = null
       var encoding = opts && opts.encoding
-      var hash = shasum(content, encoding)
+      var hash = shasum(data, encoding)
+      var tmpfile = randomPath(), target = toPath(hash)
       db.has(hash, function (err) {
         //this is already in the database
         if(!err) return cb(null, hash)
-        var tmpfile = randomPath(), target = toPath(hash)
-        fs.writeFile(tmpfile, content, encoding, function (err) {
+        fs.writeFile(tmpfile, data, encoding, function (err) {
           if(err) return cb(err)
-          mkdirp(target, function (err) {
+          mkdirp(path.dirname(target), function (err) {
             if(err) return cb(err)
-            fs.rename(tmpfile, toPath(hash), function (err) {
+            fs.rename(tmpfile, target, function (err) {
               cb(err, hash)
             })
           })
@@ -78,7 +73,6 @@ module.exports = function (dir) {
       prepare(stream, function () {
         var tmpfile = randomPath()
         var closed = false
-        console.log('prepare', tmpfile)
         stream
           .pipe(fs.createWriteStream(tmpfile))
           .on('error', function (err) {
@@ -110,4 +104,3 @@ module.exports = function (dir) {
     }
   }
 }
-

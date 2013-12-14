@@ -1,7 +1,7 @@
 {
   "name": "content-addressable-store",
-  "description": "",
-  "version": "0.0.0",
+  "description": "a content addressable store that you can stream to",
+  "version": "1.0.0",
   "homepage": "https://github.com/dominictarr/content-addressable-store",
   "repository": {
     "type": "git",

@@ -60,7 +60,7 @@ the only property of the `stat` that should be relied upon is
 
 *NOT SUPPORTED*.
 This would complexify content-addressable-store greatly
-beyond the current 114 lines, because of the need for locking.
+beyond the current ~100 lines, because of the need for locking.
 
 ## License
 

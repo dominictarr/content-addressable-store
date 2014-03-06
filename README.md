@@ -27,23 +27,24 @@ inputStream
 
 ## API
 
-### add(content, opts, cb)
+### add(content, opts, cb(err, hash))
 
 Add `content` to the database.
 specify encoding via `opts={encoding: 'utf8'}`.
 you must specify an encoding to get the correct hash,
 unless the content is a buffer.
 
+
 ### addStream (opts)
 
 Add a stream to the database. A file will be written to a temporary
 location, and then copied, to ensure durability.
 
-### get (hash, opts, cb)
+### get (hash, opts, cb(err, content))
 
 get the content for `hash`. specify encoding as above.
 
-### getStream (hash, opts, cb)
+### getStream (hash, opts)
 
 get the content for `hash` as a stream. 
 specify encoding as above.

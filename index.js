@@ -4,22 +4,33 @@ var crypto  = require('crypto')
 var path    = require('path')
 var fs      = require('fs')
 
-function shastream (enc) {
-  var hash = crypto.createHash('sha1')
-  return through(function (data) {
-    hash.update(data, enc)
-    this.push(data)
-  }, function () {
-    this.hash = hash.digest('hex')
-    this.push(null)
-  }, {autoDestroy: false})
+function createHashers (alg) {
+  var createHash
+    = 'string' === typeof alg 
+    ? crypto.createHash.bind(null, alg) 
+    : alg
+
+  return {
+    shastream: function (enc) {
+      var hash = createHash()
+      return through(function (data) {
+        hash.update(data, enc)
+        this.push(data)
+      }, function () {
+        this.hash = hash.digest('hex')
+        this.push(null)
+      }, {autoDestroy: false})
+    },
+
+    shasum: function (data, enc) {
+      return createHash().update(data, enc).digest('hex')
+    }
+  }
 }
 
-function shasum (data, enc) {
-  return crypto.createHash('sha1').update(data, enc).digest('hex')
-}
+module.exports = function (dir, alg) {
+  var h = createHashers(alg || 'sha256')
 
-module.exports = function (dir) {
   if(!dir)
     throw new Error('content-addressable-store needs a directory to work in')
   var init = false, db
@@ -50,7 +61,7 @@ module.exports = function (dir) {
     add: function (data, opts, cb) {
       if(!cb) cb = opts, opts = null
       var encoding = opts && opts.encoding
-      var hash = shasum(data, encoding)
+      var hash = h.shasum(data, encoding)
       var tmpfile = randomPath(), target = toPath(hash)
       db.has(hash, function (err) {
         //this is already in the database
@@ -68,7 +79,7 @@ module.exports = function (dir) {
     },
     addStream: function (opts) {
       var enc = opts && opts.encoding
-      var stream = shastream(enc)
+      var stream = h.shastream(enc)
 
       prepare(stream, function () {
         var tmpfile = randomPath()

@@ -5,7 +5,7 @@ var path   = require('path')
 var fs     = require('fs')
 var shasum = require('shasum')
 
-var db = CAS(path.join(osenv.tmpdir(), 'test-cas'))
+var db = CAS(path.join(osenv.tmpdir(), 'test-cas'), 'sha1')
 
 tape('add a value', function (t) {
   t.plan(2)

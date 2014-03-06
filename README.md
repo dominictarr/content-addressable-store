@@ -5,7 +5,7 @@ A content addressable store, that can be streamed to.
 ## example
 
 ``` js
-var db = require('content-addressable-store')('/tmp/my-store')
+var db = require('content-addressable-store')('/tmp/my-store', 'sha256')
 
 //add a document, and get the hash
 db.add('CONTENT', function (err, hash) {
@@ -26,6 +26,19 @@ inputStream
 ```
 
 ## API
+
+### ContentAddressableStore(path, alg)
+
+``` js
+var ContentAddressableStore = require('content-addressable-store')
+var CAS = ContentAddressableStore(path, alg)
+```
+
+`path` is the director where the content should be stored.
+`alg` is the hashing algorithm, or a `createHash` function
+that does not require a algorithm.
+
+This function returns an instance of the content addressable store.
 
 ### add(content, opts, cb(err, hash))
 

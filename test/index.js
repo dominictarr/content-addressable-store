@@ -32,6 +32,22 @@ tape('add the empty string', function (t) {
   })
 })
 
+tape('add twice & detect cached', function (t) {
+  db.add('abc', {encoding: 'utf8'}, function (err, hash, cached) {
+    if(err) throw err
+    t.equal(hash, 'a9993e364706816aba3e25717850c26c9cd0d89d')
+    t.notOk(cached)
+
+    db.add('abc', {encoding: 'utf8'}, function (err, hash, cached) {
+      if(err) throw err
+      t.equal(hash, 'a9993e364706816aba3e25717850c26c9cd0d89d')
+      t.ok(cached)
+      t.end()
+    })
+  })
+
+})
+
 tape('add a stream', function (t) {
   t.plan(2)
   fs.createReadStream(path.join(__dirname,'..', 'README.md'))

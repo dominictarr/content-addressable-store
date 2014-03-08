@@ -65,7 +65,7 @@ module.exports = function (dir, alg) {
       var tmpfile = randomPath(), target = toPath(hash)
       db.has(hash, function (err) {
         //this is already in the database
-        if(!err) return cb(null, hash)
+        if(!err) return cb(null, hash, true)
         fs.writeFile(tmpfile, data, encoding, function (err) {
           if(err) return cb(err)
           mkdirp(path.dirname(target), function (err) {

@@ -40,13 +40,14 @@ that does not require a algorithm.
 
 This function returns an instance of the content addressable store.
 
-### add(content, opts, cb(err, hash))
+### add(content, opts, cb(err, hash, cached))
 
 Add `content` to the database.
 specify encoding via `opts={encoding: 'utf8'}`.
 you must specify an encoding to get the correct hash,
 unless the content is a buffer.
 
+`cached=truthy` means that the objects was already in the store, and was not added.
 
 ### addStream (opts)
 

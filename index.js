@@ -53,6 +53,17 @@ module.exports = function (dir, alg) {
     })
   }
 
+  function writeFile (filename, data, enc, cb) {
+    if(!init)
+      mkdirp(path.dirname(filename), function (err) {
+        if(err) return cb(err)
+        init = true
+        fs.writeFile(filename, data, enc, cb)
+      })
+    else
+      fs.writeFile(filename, data, enc, cb)
+  }
+
   return db = {
     get: function (hash, opts, cb) {
       if(!cb) cb = opts, opts = null
@@ -66,7 +77,7 @@ module.exports = function (dir, alg) {
       db.has(hash, function (err) {
         //this is already in the database
         if(!err) return cb(null, hash, true)
-        fs.writeFile(tmpfile, data, encoding, function (err) {
+        writeFile(tmpfile, data, encoding, function (err) {
           if(err) return cb(err)
           mkdirp(path.dirname(target), function (err) {
             if(err) return cb(err)

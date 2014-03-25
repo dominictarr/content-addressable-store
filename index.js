@@ -123,6 +123,28 @@ module.exports = function (dir, alg) {
     },
     has: function (hash, cb) {
       fs.stat(toPath(hash), cb)
+    },
+    all: function (cb) {
+      var all = [], n = 0
+      fs.readdir(dir, function (err, ls) {
+        if(err) return done(err)
+
+        n = ls.length
+        ls.forEach(function (d) {
+          fs.readdir(path.join(dir, d), function (err, ls) {
+            ls.forEach(function (e) {
+              all.push(d + e)
+            })
+            done()
+          })
+        })
+      })
+
+      function done (err) {
+        if(err && n >= 0) return n = -1, cb(err)
+        if(--n) return
+        cb(null, all.sort())
+      }
     }
   }
 }

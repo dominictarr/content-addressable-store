@@ -71,11 +71,17 @@ since it this module will be rewritten to use leveldb (etc)
 the only property of the `stat` that should be relied upon is
 `{size: sizeOfFile}`
 
+### all (cb(err, ary))
+
+get an array of all hashes in the store.
+
 ### del (hash, cb)
 
 *NOT SUPPORTED*.
 This would complexify content-addressable-store greatly
 beyond the current ~100 lines, because of the need for locking.
+
+
 
 ## License
 

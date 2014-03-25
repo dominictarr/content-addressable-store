@@ -75,6 +75,11 @@ the only property of the `stat` that should be relied upon is
 
 get an array of all hashes in the store.
 
+### isHash(string)
+
+returns true if this string is a valid hash for this content addressable store.
+(checks whether it is the correct length of hex characters)
+
 ### del (hash, cb)
 
 *NOT SUPPORTED*.

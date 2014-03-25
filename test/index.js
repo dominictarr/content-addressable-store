@@ -16,6 +16,15 @@ var emptyHash = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
 var abcHash   = 'a9993e364706816aba3e25717850c26c9cd0d89d'
 var readmeHash
 
+tape('isHash', function (t) {
+
+  t.ok(db.isHash(helloHash))
+  t.ok(db.isHash(emptyHash))
+  t.ok(db.isHash(abcHash))
+  t.notOk(db.isHash(abcHash + 'x'))
+  t.end()
+})
+
 tape('add a value', function (t) {
   t.plan(2)
   db.add('hello', {encoding: 'utf8'}, function (err, hash) {

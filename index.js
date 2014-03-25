@@ -31,6 +31,9 @@ function createHashers (alg) {
 module.exports = function (dir, alg) {
   var h = createHashers(alg || 'sha256')
 
+  //construct a regexp to test hex strings of the correct length.
+  var rxHash = new RegExp('^[0-9a-f]{' + h.shasum('', 'utf8').length + '}$')
+
   if(!dir)
     throw new Error('content-addressable-store needs a directory to work in')
   var init = false, db
@@ -145,6 +148,9 @@ module.exports = function (dir, alg) {
         if(--n) return
         cb(null, all.sort())
       }
+    },
+    isHash: function (string) {
+      return rxHash.test(string)
     }
   }
 }

@@ -14,7 +14,7 @@
   "devDependencies": {
     "osenv": "~0.0.3",
     "tape": "~2.3.0",
-    "rimraf": "~2.2.5",
+    "rimraf": "~2.2.6",
     "shasum": "~1.0.0"
   },
   "scripts": {

@@ -124,6 +124,9 @@ module.exports = function (dir, alg) {
     getStream: function (hash) {
       return fs.createReadStream(toPath(hash))
     },
+    createStream: function (hash) {
+      return this.getStream(hash)
+    },
     has: function (hash, cb) {
       fs.stat(toPath(hash), cb)
     },

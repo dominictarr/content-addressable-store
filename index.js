@@ -2,7 +2,7 @@ var mkdirp  = require('mkdirp')
 var through = require('through')
 var crypto  = require('crypto')
 var path    = require('path')
-var fs      = require('fs')
+var fs      = require('graceful-fs')
 
 function createHashers (alg) {
   var createHash
